@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GraMood - Wallpapers según tu estado de ánimo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            background: linear-gradient(to right, #64e8de, #8a64eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        p.tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .input-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            z-index: 999;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.15);
+            font-size: 16px;
+            color: white;
+        }
+        
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.15);
+            font-size: 16px;
+            color: white;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            cursor: pointer;
+        }
+        
+        .color-select-container {
+            position: relative;
+            z-index: 99999;
+        }
+        
+        .color-select-styled {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.15);
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .color-select-styled.active {
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .color-preview {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .color-select-options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            background-color: rgba(30, 30, 50, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 0 0 8px 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+        }
+        
+        .color-select-options.active {
+            display: block;
+            z-index: 999;
+        }
+        
+        .color-select-options li {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+            z-index: 999;
+        }
+        
+        .color-select-options li:last-child {
+            border-bottom: none;
+            border-radius: 0 0 8px 8px;
+            z-index: 999;
+        }
+        
+        .color-select-options li:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            z-index: 999;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #8a64eb, #64e8de);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(138, 100, 235, 0.3);
+        }
+        
+        .output-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 10;
+            text-align: center;
+            align-items: center;
+        }
+        
+        .wallpaper-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            height: 700px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border-radius: 50px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        
+        .wallpaper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .wave {
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            left: -25%;
+            background-repeat: no-repeat;
+            background-size: cover;
+            mix-blend-mode: screen;
+            opacity: 0.7;
+            transform-origin: center;
+        }
+        
+        .download-btn {
+            display: block;
+            width: 100%;
+            margin: 20px;
+        }
+        
+        .ad-space {
+            margin-top: 50px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .ad-space p {
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+        
+        .ad-container {
+            height: 250px;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .download-btn {
+            margin: 0px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        }
+
+
+
+.iphone-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Importante: para que no interfiera con eventos */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    font-family: sans-serif;
+    padding: 0px;
+    box-sizing: border-box;
+    border: solid #000 10px;
+    border-radius: 50px;
+}
+
+.lock-elements {
+    width: 100%;
+    text-align: center;
+    margin-top: 0px;
+}
+
+.time {
+    margin-top: 80px;
+    font-size: 106px;
+    font-weight: 600;
+    text-shadow: #00000045 0 0 20px;
+}
+
+.date {
+    font-size: 16px;
+    margin-top: 4px;
+    opacity: 0.8;
+    text-shadow: #00000045 0 0 20px;
+}
+
+.unlock-icon {
+    font-size: 24px;
+    margin-bottom: 20px;
+    opacity: 0.6;
+    text-shadow: #00000045 0 0 20px;
+}
+
+.notch {
+    width: 150px;
+    height: 30px;
+    background: black;
+    border-radius: 0 0 20px 20px;
+    margin: 0 auto 10px auto;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gradien Mood</h1>
+            <p class="tagline">Genera wallpapers que fluyen con tus emociones</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="input-section">
+                <h2>Personaliza tu wallpaper</h2>
+                <div class="form-group">
+                    <label for="mood">¿Cómo te sientes hoy?</label>
+                    <input type="text" id="mood" placeholder="Ejemplo: tranquilo, enérgico, melancólico..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="color">Selecciona un color que vaya con tu estado de animo actual</label>
+                    <div class="color-select-container">
+                        <div class="color-select-styled" id="color-select-styled">
+                            <div class="color-preview" style="background-color: #0353A4;"></div>
+                            <span>Azul</span>
+                        </div>
+                        <ul class="color-select-options" id="color-select-options">
+                            <li data-value="azul"><div class="color-preview" style="background-color: #0353A4;"></div>Azul</li>
+                            <li data-value="cian"><div class="color-preview" style="background-color: #00B4D8;"></div>Cian</li>
+                            <li data-value="morado"><div class="color-preview" style="background-color: #7B2CBF;"></div>Morado</li>
+                            <li data-value="rosa"><div class="color-preview" style="background-color: #FF4D6D;"></div>Rosa</li>
+                            <li data-value="rojo"><div class="color-preview" style="background-color: #D00000;"></div>Rojo</li>
+                            <li data-value="naranja"><div class="color-preview" style="background-color: #E85D04;"></div>Naranja</li>
+                            <li data-value="amarillo"><div class="color-preview" style="background-color: #FFBA08;"></div>Amarillo</li>
+                            <li data-value="verde"><div class="color-preview" style="background-color: #2ECC71;"></div>Verde</li>
+                            <li data-value="turquesa"><div class="color-preview" style="background-color: #40916C;"></div>Turquesa</li>
+                        </ul>
+                        <select id="color" style="display: none;">
+                            <option value="azul">Azul</option>
+                            <option value="cian">Cian</option>
+                            <option value="morado">Morado</option>
+                            <option value="rosa">Rosa</option>
+                            <option value="rojo">Rojo</option>
+                            <option value="naranja">Naranja</option>
+                            <option value="amarillo">Amarillo</option>
+                            <option value="verde">Verde</option>
+                            <option value="turquesa">Turquesa</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="style">Estilo del wallpaper</label>
+                    <div class="checkbox-group" style="background-color: rgba(255, 255, 255, 0.1); padding: 12px 15px; border-radius: 8px; margin-top: 5px;">
+                        <input type="checkbox" id="abstract-style" checked disabled>
+                        <label for="abstract-style" style="display: inline; margin-left: 5px; font-weight: normal;">Abstracto</label>
+                    </div>
+                </div>
+                
+                <button id="generate-btn">Generar mi wallpaper</button>
+            </div>
+            
+            <div class="output-section" id="output-section">
+                <h2>Tu Wallpaper </h2>
+                <button id="download-btn" class="download-btn">Descargar wallpaper</button>
+                <div class="wallpaper-container">
+                    <div id="wallpaper" class="wallpaper">
+                        <!-- Waves will be generated here -->
+                    </div>
+                    <div class="iphone-overlay">
+                        <div class="lock-elements">
+                            <div class="notch"></div>
+                            <div id="time" class="time">9:41</div>
+                            <div id="date" class="date">Sunday, May 11</div>
+                            <div class="unlock-icon">🔓</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ad-space">
+                <p>Espacio publicitario 😊</p>
+                <div class="ad-container" id="ad-space-1">
+                    <!-- Google AdSense code would go here -->
+                    <p style="color: rgba(255, 255, 255, 0.6);">Google Ads</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <p>© 2025 gramood. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+    
+    <script>
+
+            const generateBtn = document.getElementById('generate-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const outputSection = document.getElementById('output-section');
+            const wallpaperEl = document.getElementById('wallpaper');
+            
+            // Emociones y sus correspondientes características
+            const moodAttributes = {
+                "feliz": {
+                    complexity: 0.9,
+                    opacity: 0.85,
+                    speed: 2.0,
+                    gradientType: "linear", // colores brillantes en diagonal
+                    direction: "to right bottom",
+                    contrastBoost: 1.2,
+                    useAccentFirst: true
+                },
+                "tranquilo": {
+                    complexity: 0.3,
+                    opacity: 0.6,
+                    speed: 0.5,
+                    gradientType: "linear",
+                    direction: "to bottom",
+                    contrastBoost: 0.6,
+                    useAccentFirst: false
+                },
+                "melancólico": {
+                    complexity: 0.4,
+                    opacity: 0.95,
+                    speed: 0.4,
+                    gradientType: "radial", // centro oscuro
+                    direction: "center",
+                    contrastBoost: 0.5,
+                    useAccentFirst: false
+                },
+                "enérgico": {
+                    complexity: 1.0,
+                    opacity: 0.9,
+                    speed: 2.5,
+                    gradientType: "linear",
+                    direction: "to top right",
+                    contrastBoost: 1.5,
+                    useAccentFirst: true
+                },
+                "soñador": {
+                    complexity: 0.6,
+                    opacity: 0.75,
+                    speed: 0.9,
+                    gradientType: "radial",
+                    direction: "center",
+                    contrastBoost: 1.0,
+                    useAccentFirst: true
+                },
+                "nostálgico": {
+                    complexity: 0.5,
+                    opacity: 0.85,
+                    speed: 0.5,
+                    gradientType: "linear",
+                    direction: "to left bottom",
+                    contrastBoost: 0.7,
+                    useAccentFirst: false
+                },
+                "inspirado": {
+                    complexity: 0.8,
+                    opacity: 0.8,
+                    speed: 1.5,
+                    gradientType: "linear",
+                    direction: "135deg",
+                    contrastBoost: 1.3,
+                    useAccentFirst: true
+                },
+                "confundido": {
+                    complexity: 0.7,
+                    opacity: 0.95,
+                    speed: 1.0,
+                    gradientType: "radial",
+                    direction: "center",
+                    contrastBoost: 1.4,
+                    useAccentFirst: false
+                },
+                "enamorado": {
+                    complexity: 0.6,
+                    opacity: 0.85,
+                    speed: 1.2,
+                    gradientType: "linear",
+                    direction: "to right",
+                    contrastBoost: 1.2,
+                    useAccentFirst: true
+                },
+                "misterioso": {
+                    complexity: 0.8,
+                    opacity: 0.95,
+                    speed: 0.7,
+                    gradientType: "radial",
+                    direction: "center",
+                    contrastBoost: 1.6,
+                    useAccentFirst: false
+                }
+                };
+
+            
+            // Paletas de colores para cada opción
+            const colorPalettes = {
+  "azul": [
+    "#003566",  // base: confianza, serenidad
+    "#FFD60A",  // acento: amarillo optimista, contrasta y equilibra lo serio
+    "#4CC9F0"   // acento: cian brillante, aporta frescura tecnológica
+  ],
+  "cian": [
+    "#00B4D8",  // base: limpieza, renovación
+    "#F15BB5",  // acento: rosa vibrante, emocionalmente creativo
+    "#FFE066"   // acento: amarillo claro, luz y optimismo suave
+  ],
+  "morado": [
+    "#7B2CBF",  // base: misterio, introspección
+    "#F72585",  // acento: rosa neón, fantasía y provocación emocional
+    "#00F5D4"   // acento: aqua eléctrico, rompe la densidad con frescura
+  ],
+  "rosa": [
+    "#FF4D6D",  // base: ternura, pasión suave
+    "#8338EC",  // acento: púrpura profundo, introspección y deseo
+    "#FFB703"   // acento: naranja brillante, alegría juguetona
+  ],
+  "rojo": [
+    "#D00000",  // base: pasión, alerta, deseo
+    "#FAA307",  // acento: naranja encendido, energía contagiosa
+    "#F72585"   // acento: rosa intenso, sensualidad emocional
+  ],
+  "naranja": [
+    "#F48C06",  // base: vitalidad, entusiasmo
+    "#7209B7",  // acento: púrpura audaz, dramatismo elegante
+    "#F94144"   // acento: rojo brillante, fuerza emocional y presencia
+  ],
+  "amarillo": [
+    "#FFD60A",  // base: alegría, creatividad
+    "#00BBF9",  // acento: cian puro, limpio y positivo
+    "#FF4D6D"   // acento: rosa fuerte, estimulación emocional
+  ],
+  "verde": [
+    "#2ECC71",  // base: naturaleza, estabilidad
+    "#F9C80E",  // acento: amarillo cálido, optimismo radiante
+    "#00A8E8"   // acento: azul vibrante, equilibrio tecnológico
+  ],
+  "turquesa": [
+    "#00A896",  // base: frescura, balance tropical
+    "#F15BB5",  // acento: rosa brillante, romanticismo con energía
+    "#FFD166"   // acento: amarillo mango, calidez emocional sutil
+  ]
+};
+
+
+
+
+            
+            // Palabras clave para detectar estados de ánimo
+            const moodKeywords = {
+                "feliz": ["feliz", "contento", "alegre", "dichoso", "entusiasta", "optimista", "jubiloso", "radiante", "felicidad"],
+                "tranquilo": ["tranquilo", "relajado", "calmado", "sereno", "pacífico", "quieto", "apacible", "zen", "paz"],
+                "melancólico": ["melancólico", "triste", "nostálgico", "pensativo", "reflexivo", "añoranza", "melancolía", "pena"],
+                "enérgico": ["enérgico", "activo", "vigoroso", "dinámico", "potente", "vivo", "fuerte", "intenso", "poderoso"],
+                "soñador": ["soñador", "fantasioso", "ilusionado", "esperanzado", "imaginativo", "fantasía", "sueños"],
+                "nostálgico": ["nostálgico", "recuerdos", "añoranza", "pasado", "memoria", "nostalgia", "remembranza"],
+                "inspirado": ["inspirado", "creativo", "motivado", "iluminado", "estimulado", "creación", "inspiración"],
+                "confundido": ["confundido", "perdido", "desorientado", "dudoso", "indeciso", "confusión", "incertidumbre"],
+                "enamorado": ["enamorado", "amor", "pasión", "cariño", "afecto", "romance", "enamoramiento", "corazón"],
+                "misterioso": ["misterioso", "enigmático", "secreto", "oculto", "intrigante", "misterio", "enigma", "incógnita"]
+            };
+            
+            // Detectar el estado de ánimo basado en texto ingresado
+            function detectMood(text) {
+                text = text.toLowerCase();
+                
+                for (const mood in moodKeywords) {
+                    for (const keyword of moodKeywords[mood]) {
+                        if (text.includes(keyword)) {
+                            return mood;
+                        }
+                    }
+                }
+                
+                // Si no se encuentra ninguna coincidencia, devolver un estado de ánimo aleatorio
+                const moods = Object.keys(moodKeywords);
+                return moods[Math.floor(Math.random() * moods.length)];
+            }
+            
+            // Crear una curva SVG con el efecto de onda
+            function createWavePath(width, height, complexity, seed) {
+                let path = `M0,${height/2}`;
+                
+                const segments = Math.floor(10 + complexity * 15);
+                const segmentWidth = width / segments;
+                
+                // Crear puntos de control para la curva
+                for (let i = 1; i <= segments; i++) {
+                    const x = i * segmentWidth;
+                    const y = height/2 + Math.sin(i * 0.5 + seed) * (50 + complexity * 70);
+                    const cp1x = x - segmentWidth / 2;
+                    const cp1y = height/2 + Math.sin((i - 0.5) * 0.5 + seed) * (70 + complexity * 90);
+                    
+                    path += ` C${cp1x},${cp1y} ${cp1x},${cp1y} ${x},${y}`;
+                }
+                
+                // Completar el path para formar una forma cerrada
+                path += ` L${width},${height} L0,${height} Z`;
+                
+                return path;
+            }
+            
+            // Nueva función para generar gradientes SVG artísticos
+            generateBtn.addEventListener('click', function () {
+    const moodInput = document.getElementById('mood').value;
+    const colorChoice = document.getElementById('color').value;
+
+    const timedom = document.getElementById('time');
+    const datedom = document.getElementById('date');
+    const date =  new Date();
+    console.log(date);
+    //pm or am hidden
+    let timeformated =  date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+    let dateformated = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    timedom.textContent = timeformated;
+    datedom.textContent = dateformated;
+
+    if (!moodInput) {
+        alert('Por favor, ingresa cómo te sientes.');
+        return;
+    }
+
+    while (wallpaperEl.firstChild) {
+        wallpaperEl.removeChild(wallpaperEl.firstChild);
+    }
+
+    const detectedMood = detectMood(moodInput);
+
+    const {
+        complexity,
+        opacity,
+        gradientType,
+        direction,
+        contrastBoost,
+        useAccentFirst
+    } = moodAttributes[detectedMood];
+
+    const palette = colorPalettes[colorChoice];
+
+    // El primer color (paleta[0]) es el color predominante
+    const colorStart = palette[0];
+    // Para contraste visual, tomamos uno de los complementarios
+    const colorEnd = palette[1]; // o palette[2], o uno aleatorio complementario
+
+    const width = wallpaperEl.offsetWidth;
+    const height = wallpaperEl.offsetHeight;
+    const svgNS = "http://www.w3.org/2000/svg";
+
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("width", "100%");
+    svg.setAttribute("height", "100%");
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+    const defs = document.createElementNS(svgNS, "defs");
+
+    let gradient;
+    if (gradientType === "radial") {
+        gradient = document.createElementNS(svgNS, "radialGradient");
+        gradient.setAttribute("id", "grad1");
+        gradient.setAttribute("cx", "50%");
+        gradient.setAttribute("cy", "50%");
+        gradient.setAttribute("r", "70%");
+    } else {
+        gradient = document.createElementNS(svgNS, "linearGradient");
+        gradient.setAttribute("id", "grad1");
+        gradient.setAttribute("x1", "0%");
+        gradient.setAttribute("y1", "0%");
+        gradient.setAttribute("x2", "100%");
+        gradient.setAttribute("y2", "100%");
+    }
+
+    const stop1 = document.createElementNS(svgNS, "stop");
+    stop1.setAttribute("offset", "0%");
+    stop1.setAttribute("stop-color", colorStart);
+
+    const stop2 = document.createElementNS(svgNS, "stop");
+    stop2.setAttribute("offset", "100%");
+    stop2.setAttribute("stop-color", colorEnd);
+
+    gradient.appendChild(stop1);
+    gradient.appendChild(stop2);
+    defs.appendChild(gradient);
+
+    const filter = document.createElementNS(svgNS, "filter");
+    filter.setAttribute("id", "blur1");
+    filter.setAttribute("x", "-10%");
+    filter.setAttribute("y", "-10%");
+    filter.setAttribute("width", "120%");
+    filter.setAttribute("height", "120%");
+
+    const gaussian = document.createElementNS(svgNS, "feGaussianBlur");
+    gaussian.setAttribute("in", "SourceGraphic");
+    gaussian.setAttribute("stdDeviation", 50 + contrastBoost * 10);
+    filter.appendChild(gaussian);
+    defs.appendChild(filter);
+    svg.appendChild(defs);
+
+    const background = document.createElementNS(svgNS, "rect");
+    background.setAttribute("width", width);
+    background.setAttribute("height", height);
+    background.setAttribute("fill", "url(#grad1)");
+    svg.appendChild(background);
+
+    const g = document.createElementNS(svgNS, "g");
+    g.setAttribute("filter", "url(#blur1)");
+
+    const numCircles = 3 + Math.floor(complexity * 6);
+    for (let i = 0; i < numCircles; i++) {
+        const circle = document.createElementNS(svgNS, "circle");
+        const radius = 150 + Math.random() * 120 * contrastBoost;
+        const cx = Math.random() * width;
+        const cy = Math.random() * height;
+
+        // Solo usar colores de acento (excluyendo el predominante)
+        const fill = palette[1 + Math.floor(Math.random() * (palette.length - 1))];
+
+        circle.setAttribute("r", radius);
+        circle.setAttribute("cx", cx);
+        circle.setAttribute("cy", cy);
+        circle.setAttribute("fill", fill + Math.floor(opacity * 255).toString(16)); // ajuste de opacidad
+
+        g.appendChild(circle);
+    }
+
+    svg.appendChild(g);
+    wallpaperEl.appendChild(svg);
+
+    outputSection.style.display = 'block';
+    outputSection.scrollIntoView({ behavior: 'smooth' });
+});
+
+
+
+downloadBtn.addEventListener('click', function () {
+    let svgEl = wallpaperEl.querySelector('svg');
+
+    // Serializa el SVG
+    const svgData = new XMLSerializer().serializeToString(svgEl);
+    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(svgBlob);
+
+    const img = new Image();
+    img.onload = function () {
+        const canvas = document.createElement('canvas');
+        const width = 1200;
+        const height = 2100;
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#000'; // Fondo negro por defecto si hay transparencia
+        ctx.fillRect(0, 0, width, height);
+
+        // Dibuja la imagen escalada
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const link = document.createElement('a');
+        link.download = 'gramood-wallpaper.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+
+        URL.revokeObjectURL(url);
+    };
+
+    img.onerror = function () {
+        alert('Error al cargar la imagen del SVG.');
+    };
+
+    // Asegura que la imagen respete los filtros y gradientes
+    img.src = url;
+});
+
+            
+            // Custom color selector functionality
+            const colorStyledSelect = document.getElementById('color-select-styled');
+            const colorOptions = document.getElementById('color-select-options');
+            const hiddenSelect = document.getElementById('color');
+            
+            // Show/hide options on click
+            colorStyledSelect.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.classList.toggle('active');
+                colorOptions.classList.toggle('active');
+            });
+            
+            // Handle option selection
+            colorOptions.querySelectorAll('li').forEach(option => {
+                option.addEventListener('click', function() {
+                    // Update styled select
+                    const colorPreview = this.querySelector('.color-preview').style.backgroundColor;
+                    colorStyledSelect.querySelector('.color-preview').style.backgroundColor = colorPreview;
+                    colorStyledSelect.querySelector('span').textContent = this.textContent;
+                    
+                    // Update hidden select value
+                    hiddenSelect.value = this.getAttribute('data-value');
+                    
+                    // Hide dropdown
+                    colorOptions.classList.remove('active');
+                    colorStyledSelect.classList.remove('active');
+                });
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function() {
+                colorOptions.classList.remove('active');
+                colorStyledSelect.classList.remove('active');
+            });
+
+    </script>
+</body>
+</html>
