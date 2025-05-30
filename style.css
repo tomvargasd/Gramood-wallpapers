@@ -1,0 +1,476 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            background: linear-gradient(to right, #64e8de, #8a64eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        p.tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .input-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            z-index: 999;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.15);
+            font-size: 16px;
+            color: white;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.15);
+            font-size: 16px;
+            color: white;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            cursor: pointer;
+        }
+
+        .color-select-container {
+            position: relative;
+            z-index: 99999;
+        }
+
+        .color-select-styled {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.15);
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .color-select-styled.active {
+            border-radius: 8px 8px 0 0;
+        }
+
+        .color-preview {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .color-select-options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            background-color: rgba(30, 30, 50, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 0 0 8px 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+        }
+
+        .color-select-options.active {
+            display: block;
+            z-index: 999;
+        }
+
+        .color-select-options li {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+            z-index: 999;
+        }
+
+        .color-select-options li:last-child {
+            border-bottom: none;
+            border-radius: 0 0 8px 8px;
+            z-index: 999;
+        }
+
+        .color-select-options li:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            z-index: 999;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        button {
+            background: linear-gradient(45deg, #8a64eb, #64e8de);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(138, 100, 235, 0.3);
+        }
+
+        .output-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 10;
+            text-align: center;
+            align-items: center;
+        }
+
+        .wallpaper-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            height: 700px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border-radius: 50px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .wallpaper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wave {
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            left: -25%;
+            background-repeat: no-repeat;
+            background-size: cover;
+            mix-blend-mode: screen;
+            opacity: 0.7;
+            transform-origin: center;
+        }
+
+        .download-btn {
+            display: block;
+            width: 100%;
+            margin: 20px;
+        }
+
+        .ad-space {
+            margin-top: 50px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .ad-space p {
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        .ad-container {
+            height: 250px;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .download-btn {
+            margin: 0px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .wallpaper-container {
+
+    height: 380px!important;
+    border-radius: 25px!important;
+}
+
+.iphone-overlay {
+    border: solid #000 7px!important;
+    border-radius: 25px!important;
+}
+
+.notch {
+    width: 80px!important;
+    height: 17px!important;
+    border-radius: 0 0 10px 10px!important;
+    margin: 0 auto 10px auto!important;
+}
+
+#dice-container {
+    display: flex;
+    flex-direction: column; /* To stack dice and text */
+    justify-content: center;
+    align-items: center;
+    height: 250px; /* Increased height for text */
+    margin-bottom: 20px;
+    perspective: 1000px; /* Added for 3D effect */
+}
+
+#dice-instruction {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+#dice {
+    width: 100px; /* Adjust as needed */
+    height: 100px; /* Adjust as needed */
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(-35deg) rotateY(45deg); /* Initial rotation */
+    transition: transform 1.5s ease-out; /* For roll animation */
+}
+
+.face {
+    position: absolute;
+    width: 100px;  /* Should match #dice width/height */
+    height: 100px; /* Should match #dice width/height */
+    background-color: rgba(255, 255, 255, 0.8); /* More opaque for pips */
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px; /* For potential pip numbers */
+    color: white;
+    backface-visibility: hidden; /* Hide back of faces */
+    padding: 10px; /* Padding for pips */
+    box-sizing: border-box; /* Include padding in width/height */
+}
+
+/* Positioning each face - 50px is half of width/height */
+.front  { transform: rotateY(0deg) translateZ(50px); }
+.back   { transform: rotateY(180deg) translateZ(50px); } /* Face 6 */
+.top    { transform: rotateX(90deg) translateZ(50px); }  /* Face 2 */
+.bottom { transform: rotateX(-90deg) translateZ(50px); } /* Face 5 */
+.right  { transform: rotateY(90deg) translateZ(50px); }  /* Face 3 */
+.left   { transform: rotateY(-90deg) translateZ(50px); } /* Face 4 */
+
+.pip {
+    display: block;
+    width: 18px; /* Pip size */
+    height: 18px; /* Pip size */
+    border-radius: 50%;
+    background: #333; /* Pip color */
+    position: absolute;
+}
+
+/* Pip layouts for a standard die */
+/* Face 1 (Front) */
+.front .pip-center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+/* Face 2 (Top) - Standard die usually has 2 on top */
+.top .pip-top-left { top: 20%; left: 20%; }
+.top .pip-bottom-right { bottom: 20%; right: 20%; }
+
+/* Face 3 (Right) */
+.right .pip-top-left { top: 20%; left: 20%; }
+.right .pip-center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.right .pip-bottom-right { bottom: 20%; right: 20%; }
+
+/* Face 4 (Left) */
+.left .pip-top-left { top: 20%; left: 20%; }
+.left .pip-top-right { top: 20%; right: 20%; }
+.left .pip-bottom-left { bottom: 20%; left: 20%; }
+.left .pip-bottom-right { bottom: 20%; right: 20%; }
+
+/* Face 5 (Bottom) */
+.bottom .pip-top-left { top: 20%; left: 20%; }
+.bottom .pip-top-right { top: 20%; right: 20%; }
+.bottom .pip-center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.bottom .pip-bottom-left { bottom: 20%; left: 20%; }
+.bottom .pip-bottom-right { bottom: 20%; right: 20%; }
+
+/* Face 6 (Back) */
+.back .pip-top-left { top: 20%; left: 20%;}
+.back .pip-top-right { top: 20%; right: 20%;}
+.back .pip-mid-left { top: 50%; left: 20%; transform: translateY(-50%);}
+.back .pip-mid-right { top: 50%; right: 20%; transform: translateY(-50%);}
+.back .pip-bottom-left { bottom: 20%; left: 20%;}
+.back .pip-bottom-right { bottom: 20%; right: 20%;}
+
+
+.time {
+    margin-top: 40px;
+    font-size: 50px!important;
+    font-weight: 600;
+    text-shadow: #00000045 0 0 20px;
+}
+.date {
+    font-size: 10px!important;
+    margin-top: 4px;
+    opacity: 0.8;
+    text-shadow: #00000045 0 0 20px;
+}
+
+.unlock-icon {
+    font-size: 13px!important;
+    margin-bottom: 20px;
+    opacity: 0.6;
+    text-shadow: #00000045 0 0 20px;
+}
+        }
+
+
+
+.iphone-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Importante: para que no interfiera con eventos */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    font-family: sans-serif;
+    padding: 0px;
+    box-sizing: border-box;
+    border: solid #000 10px;
+    border-radius: 50px;
+}
+
+.lock-elements {
+    width: 100%;
+    text-align: center;
+    margin-top: 0px;
+}
+
+.time {
+    margin-top: 80px;
+    font-size: 106px;
+    font-weight: 600;
+    text-shadow: #00000045 0 0 20px;
+}
+
+.date {
+    font-size: 16px;
+    margin-top: 4px;
+    opacity: 0.8;
+    text-shadow: #00000045 0 0 20px;
+}
+
+.unlock-icon {
+    font-size: 24px;
+    margin-bottom: 20px;
+    opacity: 0.6;
+    text-shadow: #00000045 0 0 20px;
+}
+
+.notch {
+    width: 150px;
+    height: 30px;
+    background: black;
+    border-radius: 0 0 20px 20px;
+    margin: 0 auto 10px auto;
+}
