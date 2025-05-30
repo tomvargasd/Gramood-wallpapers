@@ -6,8 +6,129 @@
     <meta name="google-adsense-account" content="ca-pub-7913928560332391">
     <title>GraMood - Wallpapers según tu estado de ánimo</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7913928560332391"
      crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gradient Mood</h1>
+            <p class="tagline">Generador de wallpapers</p>
+        </header>
+
+        <div class="main-content">
+            <div id="dice-container">
+                <div id="dice">
+                    <div class="face front face-1">
+                        <span class="pip pip-center"></span>
+                    </div>
+                    <div class="face back face-6">
+                        <span class="pip pip-top-left"></span>
+                        <span class="pip pip-top-right"></span>
+                        <span class="pip pip-mid-left"></span>
+                        <span class="pip pip-mid-right"></span>
+                        <span class="pip pip-bottom-left"></span>
+                        <span class="pip pip-bottom-right"></span>
+                    </div>
+                    <div class="face top face-2">
+                        <span class="pip pip-top-left"></span>
+                        <span class="pip pip-bottom-right"></span>
+                    </div>
+                    <div class="face bottom face-5">
+                        <span class="pip pip-top-left"></span>
+                        <span class="pip pip-top-right"></span>
+                        <span class="pip pip-center"></span>
+                        <span class="pip pip-bottom-left"></span>
+                        <span class="pip pip-bottom-right"></span>
+                    </div>
+                    <div class="face right face-3">
+                        <span class="pip pip-top-left"></span>
+                        <span class="pip pip-center"></span>
+                        <span class="pip pip-bottom-right"></span>
+                    </div>
+                    <div class="face left face-4">
+                        <span class="pip pip-top-left"></span>
+                        <span class="pip pip-top-right"></span>
+                        <span class="pip pip-bottom-left"></span>
+                        <span class="pip pip-bottom-right"></span>
+                    </div>
+                </div>
+                <p id="dice-instruction">¡Haz clic en el dado para generar un nuevo wallpaper!</p>
+            </div>
+
+            <div class="input-section">
+                <h2>Personaliza tu wallpaper</h2>
+                <div class="form-group">
+                    <label for="mood">Estado de ánimo (seleccionado por el dado):</label>
+                    <input type="text" id="mood" placeholder="Ej: tranquilo, enérgico..." readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="color">Selecciona un color que vaya con tu estado de animo actual</label>
+                    <div class="color-select-container">
+                        <div class="color-select-styled" id="color-select-styled">
+                            <div class="color-preview" style="background-color: #0353A4;"></div>
+                            <span>Azul</span>
+                        </div>
+                        <ul class="color-select-options" id="color-select-options">
+                            <li data-value="azul"><div class="color-preview" style="background-color: #0353A4;"></div>Azul</li>
+                            <li data-value="cian"><div class="color-preview" style="background-color: #00B4D8;"></div>Cian</li>
+                            <li data-value="morado"><div class="color-preview" style="background-color: #7B2CBF;"></div>Morado</li>
+                            <li data-value="rosa"><div class="color-preview" style="background-color: #FF4D6D;"></div>Rosa</li>
+                            <li data-value="rojo"><div class="color-preview" style="background-color: #D00000;"></div>Rojo</li>
+                            <li data-value="naranja"><div class="color-preview" style="background-color: #E85D04;"></div>Naranja</li>
+                            <li data-value="amarillo"><div class="color-preview" style="background-color: #FFBA08;"></div>Amarillo</li>
+                            <li data-value="verde"><div class="color-preview" style="background-color: #2ECC71;"></div>Verde</li>
+                            <li data-value="turquesa"><div class="color-preview" style="background-color: #40916C;"></div>Turquesa</li>
+                        </ul>
+                        <select id="color" style="display: none;">
+                            <option value="azul">Azul</option>
+                            <option value="cian">Cian</option>
+                            <option value="morado">Morado</option>
+                            <option value="rosa">Rosa</option>
+                            <option value="rojo">Rojo</option>
+                            <option value="naranja">Naranja</option>
+                            <option value="amarillo">Amarillo</option>
+                            <option value="verde">Verde</option>
+                            <option value="turquesa">Turquesa</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="style">Estilo del wallpaper</label>
+                    <div class="checkbox-group" style="background-color: rgba(255, 255, 255, 0.1); padding: 12px 15px; border-radius: 8px; margin-top: 5px;">
+                        <input type="checkbox" id="abstract-style" checked disabled>
+                        <label for="abstract-style" style="display: inline; margin-left: 5px; font-weight: normal;">Abstracto</label>
+                    </div>
+                </div>
+
+                <button id="generate-btn" style="display: none;">Generar mi wallpaper</button>
+            </div>
+
+            <div class="output-section" id="output-section">
+                <h2>Tu Wallpaper</h2>
+                <button id="download-btn" class="download-btn">Descargar wallpaper</button>
+                <div class="wallpaper-container">
+                    <div id="wallpaper" class="wallpaper">
+                        <!-- Waves will be generated here -->
+                    </div>
+                    <div class="iphone-overlay">
+                        <div class="lock-elements">
+                            <div class="notch"></div>
+                            <div id="time" class="time">9:41</div>
+                            <div id="date" class="date">Sunday, May 11</div>
+                            <div class="unlock-icon">🔓</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>© 2025 gramood.</p>
+        </footer>
+    </div>
+    <script src="script.js" defer></script>
 </body>
 </html>

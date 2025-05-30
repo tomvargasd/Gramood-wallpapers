@@ -32,7 +32,7 @@ const dice = document.getElementById('dice');
                     setTimeout(() => {
                         dice.style.transition = 'transform 0.7s ease-out'; // Smoother snap
                         dice.style.transform = faceRotations[resultFace];
-                        console.log("Dice rolled:", currentDiceRoll);
+                        console.log("Dado lanzado:", currentDiceRoll);
 
                         // Trigger wallpaper generation with random mood and color
                         const randomMoodKey = Object.keys(moodAttributes)[Math.floor(Math.random() * Object.keys(moodAttributes).length)];
@@ -273,7 +273,7 @@ const dice = document.getElementById('dice');
                 const date = new Date();
                 //pm or am hidden
                 let timeformated = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
-                let dateformated = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+                let dateformated = date.toLocaleDateString('es-ES', { weekday: 'long', month: 'long', day: 'numeric' });
                 timedom.textContent = timeformated;
                 datedom.textContent = dateformated;
 
@@ -285,7 +285,7 @@ const dice = document.getElementById('dice');
                 const currentMoodAttributes = moodAttributes[moodKey];
                 if (!currentMoodAttributes) {
                     console.error("Mood key not found:", moodKey);
-                    alert("Error: Mood attributes not found for " + moodKey);
+                    alert("Error: No se encontraron atributos para el estado de ánimo: " + moodKey);
                     return;
                 }
 
@@ -301,7 +301,7 @@ const dice = document.getElementById('dice');
                 const palette = colorPalettes[colorKey];
                 if (!palette) {
                     console.error("Color key not found:", colorKey);
-                    alert("Error: Color palette not found for " + colorKey);
+                    alert("Error: No se encontró la paleta de colores para: " + colorKey);
                     return;
                 }
 
