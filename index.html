@@ -56,56 +56,6 @@
                 <p id="dice-instruction">¡Haz clic en el dado para generar un nuevo wallpaper!</p>
             </div>
 
-            <div class="input-section">
-                <h2>Personaliza tu wallpaper</h2>
-                <div class="form-group">
-                    <label for="mood">Estado de ánimo (seleccionado por el dado):</label>
-                    <input type="text" id="mood" placeholder="Ej: tranquilo, enérgico..." readonly>
-                </div>
-
-                <div class="form-group">
-                    <label for="color">Selecciona un color que vaya con tu estado de animo actual</label>
-                    <div class="color-select-container">
-                        <div class="color-select-styled" id="color-select-styled">
-                            <div class="color-preview" style="background-color: #0353A4;"></div>
-                            <span>Azul</span>
-                        </div>
-                        <ul class="color-select-options" id="color-select-options">
-                            <li data-value="azul"><div class="color-preview" style="background-color: #0353A4;"></div>Azul</li>
-                            <li data-value="cian"><div class="color-preview" style="background-color: #00B4D8;"></div>Cian</li>
-                            <li data-value="morado"><div class="color-preview" style="background-color: #7B2CBF;"></div>Morado</li>
-                            <li data-value="rosa"><div class="color-preview" style="background-color: #FF4D6D;"></div>Rosa</li>
-                            <li data-value="rojo"><div class="color-preview" style="background-color: #D00000;"></div>Rojo</li>
-                            <li data-value="naranja"><div class="color-preview" style="background-color: #E85D04;"></div>Naranja</li>
-                            <li data-value="amarillo"><div class="color-preview" style="background-color: #FFBA08;"></div>Amarillo</li>
-                            <li data-value="verde"><div class="color-preview" style="background-color: #2ECC71;"></div>Verde</li>
-                            <li data-value="turquesa"><div class="color-preview" style="background-color: #40916C;"></div>Turquesa</li>
-                        </ul>
-                        <select id="color" style="display: none;">
-                            <option value="azul">Azul</option>
-                            <option value="cian">Cian</option>
-                            <option value="morado">Morado</option>
-                            <option value="rosa">Rosa</option>
-                            <option value="rojo">Rojo</option>
-                            <option value="naranja">Naranja</option>
-                            <option value="amarillo">Amarillo</option>
-                            <option value="verde">Verde</option>
-                            <option value="turquesa">Turquesa</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="style">Estilo del wallpaper</label>
-                    <div class="checkbox-group" style="background-color: rgba(255, 255, 255, 0.1); padding: 12px 15px; border-radius: 8px; margin-top: 5px;">
-                        <input type="checkbox" id="abstract-style" checked disabled>
-                        <label for="abstract-style" style="display: inline; margin-left: 5px; font-weight: normal;">Abstracto</label>
-                    </div>
-                </div>
-
-                <button id="generate-btn" style="display: none;">Generar mi wallpaper</button>
-            </div>
-
             <div class="output-section" id="output-section">
                 <h2>Tu Wallpaper</h2>
                 <button id="download-btn" class="download-btn">Descargar wallpaper</button>

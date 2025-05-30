@@ -39,16 +39,16 @@ const dice = document.getElementById('dice');
                         const randomColorKey = Object.keys(colorPalettes)[Math.floor(Math.random() * Object.keys(colorPalettes).length)];
 
                         // Update the UI to reflect the randomly selected mood and color
-                        document.getElementById('mood').value = randomMoodKey; // Optional: update input field
+                        // document.getElementById('mood').value = randomMoodKey; // Mood input field removed
 
-                        // Update custom color selector UI
-                        const selectedColorOption = Array.from(colorOptions.querySelectorAll('li')).find(li => li.getAttribute('data-value') === randomColorKey);
-                        if (selectedColorOption) {
-                            const colorPreview = selectedColorOption.querySelector('.color-preview').style.backgroundColor;
-                            colorStyledSelect.querySelector('.color-preview').style.backgroundColor = colorPreview;
-                            colorStyledSelect.querySelector('span').textContent = selectedColorOption.textContent;
-                            hiddenSelect.value = randomColorKey;
-                        }
+                        // Color selector UI also removed
+                        // const selectedColorOption = Array.from(colorOptions.querySelectorAll('li')).find(li => li.getAttribute('data-value') === randomColorKey);
+                        // if (selectedColorOption) {
+                        //     const colorPreview = selectedColorOption.querySelector('.color-preview').style.backgroundColor;
+                        //     colorStyledSelect.querySelector('.color-preview').style.backgroundColor = colorPreview;
+                        //     colorStyledSelect.querySelector('span').textContent = selectedColorOption.textContent;
+                        //     hiddenSelect.value = randomColorKey;
+                        // }
 
                         generateWallpaperAndUpdateUI(randomMoodKey, randomColorKey);
 
@@ -56,13 +56,11 @@ const dice = document.getElementById('dice');
                 });
             }
 
-            const generateBtn = document.getElementById('generate-btn');
-            // const moodInputEl = document.getElementById('mood'); // Already declared effectively by getElementById('mood').value
-            // const colorSelectEl = document.getElementById('color'); // Already declared effectively by getElementById('color').value
+            // const generateBtn = document.getElementById('generate-btn'); // Button removed
             const downloadBtn = document.getElementById('download-btn');
             const outputSection = document.getElementById('output-section');
             const wallpaperEl = document.getElementById('wallpaper');
-            // Custom color selector elements are already globally available: colorStyledSelect, colorOptions, hiddenSelect
+            // colorStyledSelect, colorOptions, hiddenSelect are no longer needed as UI elements are removed
 
             // Emociones y sus correspondientes características
             const moodAttributes = {
@@ -212,36 +210,11 @@ const dice = document.getElementById('dice');
 
 
 
-            // Palabras clave para detectar estados de ánimo
-            const moodKeywords = {
-                "feliz": ["feliz", "contento", "alegre", "dichoso", "entusiasta", "optimista", "jubiloso", "radiante", "felicidad"],
-                "tranquilo": ["tranquilo", "relajado", "calmado", "sereno", "pacífico", "quieto", "apacible", "zen", "paz"],
-                "melancólico": ["melancólico", "triste", "nostálgico", "pensativo", "reflexivo", "añoranza", "melancolía", "pena"],
-                "enérgico": ["enérgico", "activo", "vigoroso", "dinámico", "potente", "vivo", "fuerte", "intenso", "poderoso"],
-                "soñador": ["soñador", "fantasioso", "ilusionado", "esperanzado", "imaginativo", "fantasía", "sueños"],
-                "nostálgico": ["nostálgico", "recuerdos", "añoranza", "pasado", "memoria", "nostalgia", "remembranza"],
-                "inspirado": ["inspirado", "creativo", "motivado", "iluminado", "estimulado", "creación", "inspiración"],
-                "confundido": ["confundido", "perdido", "desorientado", "dudoso", "indeciso", "confusión", "incertidumbre"],
-                "enamorado": ["enamorado", "amor", "pasión", "cariño", "afecto", "romance", "enamoramiento", "corazón"],
-                "misterioso": ["misterioso", "enigmático", "secreto", "oculto", "intrigante", "misterio", "enigma", "incógnita"]
-            };
+            // Palabras clave para detectar estados de ánimo - REMOVED
+            // const moodKeywords = { ... };
 
-            // Detectar el estado de ánimo basado en texto ingresado
-            function detectMood(text) {
-                text = text.toLowerCase();
-
-                for (const mood in moodKeywords) {
-                    for (const keyword of moodKeywords[mood]) {
-                        if (text.includes(keyword)) {
-                            return mood;
-                        }
-                    }
-                }
-
-                // Si no se encuentra ninguna coincidencia, devolver un estado de ánimo aleatorio
-                const moods = Object.keys(moodKeywords);
-                return moods[Math.floor(Math.random() * moods.length)];
-            }
+            // Detectar el estado de ánimo basado en texto ingresado - REMOVED
+            // function detectMood(text) { ... }
 
             // Crear una curva SVG con el efecto de onda
             function createWavePath(width, height, complexity, seed) {
@@ -279,43 +252,49 @@ const dice = document.getElementById('dice');
 
                 outputSection.style.display = 'block';
 
-                const width = wallpaperEl.offsetWidth;
-                const height = wallpaperEl.offsetHeight;
+                setTimeout(function() {
+                    while (wallpaperEl.firstChild) {
+                        wallpaperEl.removeChild(wallpaperEl.firstChild);
+                    }
 
-                while (wallpaperEl.firstChild) {
-                    wallpaperEl.removeChild(wallpaperEl.firstChild);
-                }
+                    const currentMoodAttributes = moodAttributes[moodKey];
+                    if (!currentMoodAttributes) {
+                        console.error("Atributos de ánimo no encontrados para:", moodKey); // Already translated, but good to keep error messages consistent
+                        alert("Error: No se encontraron atributos para el estado de ánimo: " + moodKey);
+                        return;
+                    }
 
-                // Use the provided moodKey directly, no need for detectMood if mood is already a key
-                const currentMoodAttributes = moodAttributes[moodKey];
-                if (!currentMoodAttributes) {
-                    console.error("Mood key not found:", moodKey);
-                    alert("Error: No se encontraron atributos para el estado de ánimo: " + moodKey);
-                    return;
-                }
+                    const {
+                        complexity,
+                        opacity,
+                        gradientType,
+                        // direction, // Unused
+                        contrastBoost
+                        // useAccentFirst // Unused
+                    } = currentMoodAttributes;
 
-                const {
-                    complexity,
-                    opacity,
-                    gradientType,
-                    direction,
-                    contrastBoost,
-                    useAccentFirst
-                } = currentMoodAttributes;
+                    const palette = colorPalettes[colorKey];
+                    if (!palette) {
+                        console.error("Paleta de colores no encontrada para:", colorKey); // Already translated
+                        alert("Error: No se encontró la paleta de colores para: " + colorKey);
+                        return;
+                    }
 
-                const palette = colorPalettes[colorKey];
-                if (!palette) {
-                    console.error("Color key not found:", colorKey);
-                    alert("Error: No se encontró la paleta de colores para: " + colorKey);
-                    return;
-                }
+                    const colorStart = palette[0];
+                    const colorEnd = palette[1];
 
-                const colorStart = palette[0];
-                const colorEnd = palette[1];
+                    const width = wallpaperEl.offsetWidth;
+                    const height = wallpaperEl.offsetHeight;
 
-                const width = wallpaperEl.offsetWidth;
-                const height = wallpaperEl.offsetHeight;
-                const svgNS = "http://www.w3.org/2000/svg";
+                    if (width === 0 || height === 0) {
+                        console.error("Error: wallpaperEl dimensions are zero even after timeout. Width:", width, "Height:", height);
+                        // Consider hiding outputSection and alerting user if this happens
+                        // outputSection.style.display = 'none';
+                        // alert("Error al calcular las dimensiones del wallpaper. Inténtalo de nuevo.");
+                        return;
+                    }
+
+                    const svgNS = "http://www.w3.org/2000/svg";
 
                 const svg = document.createElementNS(svgNS, "svg");
                 svg.setAttribute("width", "100%");
@@ -396,19 +375,10 @@ const dice = document.getElementById('dice');
                 wallpaperEl.appendChild(svg);
 
                 outputSection.scrollIntoView({ behavior: 'smooth' });
-            }
+            }, 0); // setTimeout delay
+        }
 
-            generateBtn.addEventListener('click', function () {
-                const moodInputVal = document.getElementById('mood').value;
-                const colorChoiceVal = document.getElementById('color').value;
-
-                if (!moodInputVal) {
-                    alert('Por favor, ingresa cómo te sientes.');
-                    return;
-                }
-                const detectedMoodKey = detectMood(moodInputVal); // detectMood returns a key
-                generateWallpaperAndUpdateUI(detectedMoodKey, colorChoiceVal);
-            });
+            // generateBtn.addEventListener('click', function () { ... }); // REMOVED
 
             downloadBtn.addEventListener('click', function () {
     let svgEl = wallpaperEl.querySelector('svg');
@@ -450,37 +420,16 @@ const dice = document.getElementById('dice');
 });
 
 
-            // Custom color selector functionality
-            const colorStyledSelect = document.getElementById('color-select-styled');
-            const colorOptions = document.getElementById('color-select-options');
-            const hiddenSelect = document.getElementById('color');
+            // Custom color selector functionality - REMOVED
+            // const colorStyledSelect = document.getElementById('color-select-styled');
+            // const colorOptions = document.getElementById('color-select-options');
+            // const hiddenSelect = document.getElementById('color');
 
-            // Show/hide options on click
-            colorStyledSelect.addEventListener('click', function(e) {
-                e.stopPropagation();
-                this.classList.toggle('active');
-                colorOptions.classList.toggle('active');
-            });
+            // Show/hide options on click - REMOVED
+            // colorStyledSelect.addEventListener('click', function(e) { ... });
 
-            // Handle option selection
-            colorOptions.querySelectorAll('li').forEach(option => {
-                option.addEventListener('click', function() {
-                    // Update styled select
-                    const colorPreview = this.querySelector('.color-preview').style.backgroundColor;
-                    colorStyledSelect.querySelector('.color-preview').style.backgroundColor = colorPreview;
-                    colorStyledSelect.querySelector('span').textContent = this.textContent;
+            // Handle option selection - REMOVED
+            // colorOptions.querySelectorAll('li').forEach(option => { ... });
 
-                    // Update hidden select value
-                    hiddenSelect.value = this.getAttribute('data-value');
-
-                    // Hide dropdown
-                    colorOptions.classList.remove('active');
-                    colorStyledSelect.classList.remove('active');
-                });
-            });
-
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function() {
-                colorOptions.classList.remove('active');
-                colorStyledSelect.classList.remove('active');
-            });
+            // Close dropdown when clicking outside - REMOVED
+            // document.addEventListener('click', function() { ... });
