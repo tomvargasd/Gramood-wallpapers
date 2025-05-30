@@ -277,6 +277,11 @@ const dice = document.getElementById('dice');
                 timedom.textContent = timeformated;
                 datedom.textContent = dateformated;
 
+                outputSection.style.display = 'block';
+
+                const width = wallpaperEl.offsetWidth;
+                const height = wallpaperEl.offsetHeight;
+
                 while (wallpaperEl.firstChild) {
                     wallpaperEl.removeChild(wallpaperEl.firstChild);
                 }
@@ -390,7 +395,6 @@ const dice = document.getElementById('dice');
                 svg.appendChild(g);
                 wallpaperEl.appendChild(svg);
 
-                outputSection.style.display = 'block';
                 outputSection.scrollIntoView({ behavior: 'smooth' });
             }
 
