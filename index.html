@@ -55,10 +55,16 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="style">Estilo del wallpaper</label>
-                    <div class="checkbox-group" style="background-color: rgba(255, 255, 255, 0.1); padding: 12px 15px; border-radius: 8px; margin-top: 5px;">
-                        <input type="checkbox" id="abstract-style" checked disabled>
-                        <label for="abstract-style" style="display: inline; margin-left: 5px; font-weight: normal;">Abstracto</label>
+                    <label>Estilo del wallpaper</label> <!-- Removed 'for' as it's now a group -->
+                    <div class="radio-button-group">
+                        <div> <!-- Option 1: Abstract -->
+                            <input type="radio" id="style-abstract" name="wallpaper_style" value="abstract" checked>
+                            <label for="style-abstract">Abstracto</label>
+                        </div>
+                        <div> <!-- Option 2: Waves -->
+                            <input type="radio" id="style-waves" name="wallpaper_style" value="waves">
+                            <label for="style-waves">Ondas (Waves)</label>
+                        </div>
                     </div>
                 </div>
                 
