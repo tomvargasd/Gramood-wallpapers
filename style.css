@@ -386,3 +386,33 @@
     border-radius: 0 0 20px 20px;
     margin: 0 auto 10px auto;
 }
+
+/* Styles for new radio button group */
+.radio-button-group {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 5px;
+}
+
+.radio-button-group > div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.radio-button-group > div:last-child {
+    margin-bottom: 0;
+}
+
+.radio-button-group input[type="radio"] {
+    width: auto;
+    margin-right: 10px;
+    accent-color: #8a64eb;
+}
+
+.radio-button-group label {
+    font-weight: normal;
+    margin-bottom: 0;
+    display: inline;
+}
