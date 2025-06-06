@@ -12,7 +12,7 @@ Gramood is a web application that generates abstract wallpapers based on your cu
 - Customizable color palettes
 - Selectable wallpaper styles: Abstract and Waves.
 - Abstract art style using SVG with blurred shapes and gradients.
-- Waves art style using SVG with layered, flowing Bezier curves.
+- Waves art style: Generates complex, overlapping organic shapes with sophisticated gradients, inspired by macOS desktop wallpapers. Uses cubic Bezier curves.
 - Downloadable wallpapers (PNG format)
 - Responsive design for various screen sizes
 - User-friendly interface with custom color selector
@@ -39,9 +39,9 @@ The project consists of the following main files:
 
 The wallpaper generation uses SVG (Scalable Vector Graphics) to create dynamic and abstract visuals. Based on the detected mood from the user's input, different parameters such as complexity, opacity, speed, direction, and color emphasis (useAccentFirst) are algorithmically determined from `moodAttributes`.
 
-**Abstract Style:** This style generates a series of SVG circles with varying sizes and positions, applying blur effects to them. These shapes are layered on top of a dynamically generated gradient background (linear or radial, depending on the mood). The combination of these elements produces the final unique and abstract wallpaper.
+**Abstract Style:** This style generates a series of SVG circles with varying sizes and positions, applying blur effects to them. These shapes are layered on top of a dynamically generated gradient background (linear or radial, depending on the mood). The combination of these elements produces the final unique and abstract wallpaper. All elements are drawn on a fixed 16:9 canvas (1920x1080) and use `preserveAspectRatio` for scaling.
 
-**Waves Style:** This style generates a series of layered, flowing SVG paths using quadratic Bezier curves. The shape, color order, opacity, and directional lean of these waves are influenced by the selected mood's parameters (complexity, speed, useAccentFirst, direction). This creates a fluid and dynamic aesthetic.
+**Waves Style:** Inspired by the aesthetic of macOS wallpapers, this style generates a small number (3-7) of complex, overlapping organic paths using cubic Bezier curves. Each path is filled with a dynamic linear gradient that typically transitions from a mood-palette color to a very dark shade at a variable offset, creating a sense of depth and richness. The overall flow and characteristics of these shapes (like the number of anchor points and undulation) are influenced by mood parameters such as complexity and speed. The SVG is designed on a fixed 16:9 canvas (1920x1080) and uses `preserveAspectRatio` for consistent scaling.
 
 The lock screen overlay with time and date is an HTML/CSS feature for presentational purposes and is independent of the SVG wallpaper itself.
 
