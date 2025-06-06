@@ -64,7 +64,7 @@ const generateBtn = document.getElementById('generate-btn');
                     opacity: 0.8,
                     speed: 1.5,
                     gradientType: "linear",
-                    direction: "135deg",
+                    direction: "135deg", // Interpreted as "to top right" or similar by gradient logic
                     contrastBoost: 1.3,
                     useAccentFirst: true
                 },
@@ -176,7 +176,7 @@ const generateBtn = document.getElementById('generate-btn');
                 const svgNS = "http://www.w3.org/2000/svg";
                 const { complexity, opacity, gradientType, contrastBoost } = detectedMoodParams;
                 const colorStart = palette[0];
-                const colorEnd = palette[1]; // Abstract uses first two colors for gradient
+                const colorEnd = palette[1];
 
                 const svg = document.createElementNS(svgNS, "svg");
                 svg.setAttribute("width", "100%");
@@ -187,13 +187,13 @@ const generateBtn = document.getElementById('generate-btn');
                 let gradient;
                 if (gradientType === "radial") {
                     gradient = document.createElementNS(svgNS, "radialGradient");
-                    gradient.setAttribute("id", "grad1"); // ID can be consistent as it's local to this SVG
+                    gradient.setAttribute("id", "abstractGrad");
                     gradient.setAttribute("cx", "50%");
                     gradient.setAttribute("cy", "50%");
                     gradient.setAttribute("r", "70%");
                 } else {
                     gradient = document.createElementNS(svgNS, "linearGradient");
-                    gradient.setAttribute("id", "grad1");
+                    gradient.setAttribute("id", "abstractGrad");
                     gradient.setAttribute("x1", "0%");
                     gradient.setAttribute("y1", "0%");
                     gradient.setAttribute("x2", "100%");
@@ -210,33 +210,32 @@ const generateBtn = document.getElementById('generate-btn');
                 defs.appendChild(gradient);
 
                 const filter = document.createElementNS(svgNS, "filter");
-                filter.setAttribute("id", "blur1"); // Similar ID, local to this SVG
+                filter.setAttribute("id", "abstractBlur");
                 filter.setAttribute("x", "-10%");
                 filter.setAttribute("y", "-10%");
                 filter.setAttribute("width", "120%");
                 filter.setAttribute("height", "120%");
                 const gaussian = document.createElementNS(svgNS, "feGaussianBlur");
                 gaussian.setAttribute("in", "SourceGraphic");
-                gaussian.setAttribute("stdDeviation", 50 + contrastBoost * 10);
+                gaussian.setAttribute("stdDeviation", 50 + contrastBoost * 10); // Abstract style has a larger blur
                 filter.appendChild(gaussian);
                 defs.appendChild(filter);
                 svg.appendChild(defs);
 
-                const backgroundRect = document.createElementNS(svgNS, "rect");
-                backgroundRect.setAttribute("width", width);
-                backgroundRect.setAttribute("height", height);
-                backgroundRect.setAttribute("fill", "url(#grad1)");
-                svg.appendChild(backgroundRect);
+                const backgroundRectEl = document.createElementNS(svgNS, "rect");
+                backgroundRectEl.setAttribute("width", width);
+                backgroundRectEl.setAttribute("height", height);
+                backgroundRectEl.setAttribute("fill", "url(#abstractGrad)");
+                svg.appendChild(backgroundRectEl);
 
                 const g = document.createElementNS(svgNS, "g");
-                g.setAttribute("filter", "url(#blur1)");
+                g.setAttribute("filter", "url(#abstractBlur)");
                 const numCircles = 3 + Math.floor(complexity * 6);
                 for (let i = 0; i < numCircles; i++) {
                     const circle = document.createElementNS(svgNS, "circle");
                     const radius = 150 + Math.random() * 120 * contrastBoost;
                     const cx = Math.random() * width;
                     const cy = Math.random() * height;
-                    // Abstract circles use accent colors beyond the first one for variety
                     const fill = palette[1 + Math.floor(Math.random() * (palette.length - 1))] || palette[0];
                     circle.setAttribute("r", radius);
                     circle.setAttribute("cx", cx);
@@ -251,7 +250,7 @@ const generateBtn = document.getElementById('generate-btn');
             function generateWavesWallpaper(detectedMoodParams, palette, width, height, wallpaperElement) {
                 const svgNS = "http://www.w3.org/2000/svg";
                 const { complexity, speed, useAccentFirst } = detectedMoodParams;
-                const moodDirection = detectedMoodParams.direction;
+                const moodDirection = detectedMoodParams.direction || "to bottom";
 
                 let currentPalette = [...palette];
                 if (useAccentFirst && currentPalette.length > 1) {
@@ -265,12 +264,90 @@ const generateBtn = document.getElementById('generate-btn');
                 svg.setAttribute("height", "100%");
                 svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
+                const defs = document.createElementNS(svgNS, "defs");
+                svg.appendChild(defs);
+
+                // Define blur filter once
+                const filter = document.createElementNS(svgNS, "filter");
+                filter.setAttribute("id", "waveBlurFilter");
+                filter.setAttribute("x", "-10%");
+                filter.setAttribute("y", "-10%");
+                filter.setAttribute("width", "120%");
+                filter.setAttribute("height", "120%");
+                const gaussianBlur = document.createElementNS(svgNS, "feGaussianBlur");
+                gaussianBlur.setAttribute("in", "SourceGraphic");
+                gaussianBlur.setAttribute("stdDeviation", "3"); // Subtle blur
+                filter.appendChild(gaussianBlur);
+                defs.appendChild(filter);
+
+                const backgroundRect = document.createElementNS(svgNS, "rect");
+                backgroundRect.setAttribute("x", "0");
+                backgroundRect.setAttribute("y", "0");
+                backgroundRect.setAttribute("width", width);
+                backgroundRect.setAttribute("height", height);
+                backgroundRect.setAttribute("fill", currentPalette[0] || '#000000');
+                svg.appendChild(backgroundRect);
+
                 let numWaves = 3 + Math.floor(complexity * 4);
                 if (numWaves < 1) numWaves = 1;
 
                 for (let i = 0; i < numWaves; i++) {
                     const path = document.createElementNS(svgNS, "path");
-                    const waveColor = currentPalette[i % currentPalette.length];
+                    const gradientId = `waveGradient${i}`;
+
+                    const linearGradient = document.createElementNS(svgNS, "linearGradient");
+                    linearGradient.setAttribute("id", gradientId);
+
+                    let x1 = "0%", y1 = "0%", x2 = "0%", y2 = "100%";
+                    let effectiveDirection = moodDirection;
+                    if (effectiveDirection === "135deg") effectiveDirection = "to top right";
+                    else if (effectiveDirection === "45deg") effectiveDirection = "to bottom right";
+                    else if (effectiveDirection === "225deg") effectiveDirection = "to bottom left";
+                    else if (effectiveDirection === "315deg") effectiveDirection = "to top left";
+
+                    if (effectiveDirection.includes("left") && effectiveDirection.includes("right")) {
+                        x1 = "50%"; y1 = "0%"; x2 = "50%"; y2 = "100%";
+                    } else if (effectiveDirection.includes("left")) {
+                        x1 = "100%"; x2 = "0%";
+                    } else if (effectiveDirection.includes("right")) {
+                        x1 = "0%"; x2 = "100%";
+                    } else {
+                        x1 = "0%"; x2 = "0%";
+                    }
+
+                    if (effectiveDirection.includes("top") && effectiveDirection.includes("bottom")) {
+                         y1 = "50%"; y2 = "50%";
+                    } else if (effectiveDirection.includes("top")) {
+                        y1 = "100%"; y2 = "0%";
+                    } else if (effectiveDirection.includes("bottom")) {
+                        y1 = "0%"; y2 = "100%";
+                    } else {
+                        y1 = "0%"; y2 = "0%";
+                    }
+
+                    if (x1 === x2 && y1 === y2) {
+                        x1 = "0%"; y1 = "0%"; x2 = "0%"; y2 = "100%";
+                    }
+
+                    linearGradient.setAttribute("x1", x1);
+                    linearGradient.setAttribute("y1", y1);
+                    linearGradient.setAttribute("x2", x2);
+                    linearGradient.setAttribute("y2", y2);
+
+                    const stopColor1 = currentPalette[i % currentPalette.length];
+                    const stopColor2 = currentPalette[(i + 1) % currentPalette.length];
+
+                    const stop1El = document.createElementNS(svgNS, "stop"); // Renamed variable
+                    stop1El.setAttribute("offset", "0%");
+                    stop1El.setAttribute("stop-color", stopColor1);
+                    linearGradient.appendChild(stop1El);
+
+                    const stop2El = document.createElementNS(svgNS, "stop"); // Renamed variable
+                    stop2El.setAttribute("offset", "100%");
+                    stop2El.setAttribute("stop-color", stopColor2);
+                    linearGradient.appendChild(stop2El);
+
+                    defs.appendChild(linearGradient);
 
                     let calculatedOpacity = detectedMoodParams.opacity - (i / numWaves) * (detectedMoodParams.opacity * 0.6);
                     calculatedOpacity = Math.max(0.2, Math.min(1, calculatedOpacity));
@@ -291,7 +368,8 @@ const generateBtn = document.getElementById('generate-btn');
 
                     const d = `M0,${yStart} Q${cpX},${yControl} ${width},${yStart} L${width},${height} L0,${height} Z`;
                     path.setAttribute("d", d);
-                    path.setAttribute("fill", waveColor);
+                    path.setAttribute("fill", `url(#${gradientId})`);
+                    path.setAttribute("filter", "url(#waveBlurFilter)"); // Apply blur to each wave path
                     svg.appendChild(path);
                 }
                 wallpaperElement.appendChild(svg);
@@ -302,7 +380,7 @@ const generateBtn = document.getElementById('generate-btn');
 
                 requestAnimationFrame(() => {
                     const moodInput = document.getElementById('mood').value;
-                    const colorChoice = document.getElementById('color').value; // This is the key like "azul", "cian"
+                    const colorChoice = document.getElementById('color').value;
                     const selectedStyle = document.querySelector('input[name="wallpaper_style"]:checked').value;
 
                     const timedom = document.getElementById('time');
@@ -323,8 +401,8 @@ const generateBtn = document.getElementById('generate-btn');
                     }
 
                     const detectedMoodKey = detectMood(moodInput);
-                    const currentMoodParams = moodAttributes[detectedMoodKey]; // Object with complexity, opacity etc.
-                    const selectedPaletteArray = colorPalettes[colorChoice];     // Array of colors e.g. ["#003566", "#FFD60A", "#4CC9F0"]
+                    const currentMoodParams = moodAttributes[detectedMoodKey];
+                    const selectedPaletteArray = colorPalettes[colorChoice];
 
                     const width = wallpaperEl.offsetWidth;
                     const height = wallpaperEl.offsetHeight;
@@ -365,30 +443,7 @@ const generateBtn = document.getElementById('generate-btn');
                     canvas.height = downloadHeight;
 
                     const ctx = canvas.getContext('2d');
-
-                    // Determine background color for download canvas based on selected style & palette
-                    const colorChoice = document.getElementById('color').value;
-                    const selectedPaletteArray = colorPalettes[colorChoice];
-                    let downloadBgColor = selectedPaletteArray[0] || '#000000'; // Default to first color or black
-
-                    // For abstract style, the SVG itself has a gradient background.
-                    // For waves style, we might want the first color of the (potentially swapped) palette.
-                    const selectedStyle = document.querySelector('input[name="wallpaper_style"]:checked').value;
-                    if (selectedStyle === 'waves') {
-                        const detectedMoodKey = detectMood(document.getElementById('mood').value);
-                        const currentMoodParams = moodAttributes[detectedMoodKey];
-                        if (currentMoodParams.useAccentFirst && selectedPaletteArray.length > 1) {
-                            downloadBgColor = selectedPaletteArray[1]; // Use the swapped first color (original accent)
-                        }
-                    }
-                    // However, the abstract style's SVG already includes a full background rect.
-                    // The waves style paths are opaque and layered, so the first one effectively forms a background.
-                    // The most reliable background for the PNG is the one visually present in the SVG.
-                    // A simpler approach is to let the SVG render as is, and if its own background isn't sufficient (e.g. transparent areas),
-                    // then a canvas fill is important. Since both styles aim for full coverage, this might be okay.
-                    // The current fillRect uses the *original* first palette color.
-                    // Let's keep it simple: use the original base color of the selected palette for canvas background.
-                    ctx.fillStyle = colorPalettes[document.getElementById('color').value][0] || '#000000';
+                    ctx.fillStyle = '#FFFFFF';
                     ctx.fillRect(0, 0, downloadWidth, downloadHeight);
 
                     ctx.drawImage(img, 0, 0, downloadWidth, downloadHeight);
